@@ -1,0 +1,11 @@
+{
+  "name": "entrega-final-adl",
+  "version": "1.0.0",
+  "description": "Entrega final con todo lo aprendido durante el bootcamp.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juan Pedro Tovar",
+  "license": "ISC"
+}
