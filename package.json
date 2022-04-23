@@ -2,10 +2,21 @@
   "name": "entrega-final-adl",
   "version": "1.0.0",
   "description": "Entrega final con todo lo aprendido durante el bootcamp.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Juan Pedro Tovar",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "bootstrap": "^5.1.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.5",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3"
+  }
 }

@@ -2,9 +2,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 
 CREATE TABLE marcas(
-    id SERIAL UNIQUE,
+    id_marca SERIAL UNIQUE,
     nombre VARCHAR(50) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id_marca)
 );
 
 INSERT INTO marcas(nombre) VALUES('CUBE');
@@ -17,52 +17,52 @@ INSERT INTO marcas(nombre) VALUES('ACID');
 INSERT INTO marcas(nombre) VALUES('RFR');
 
 CREATE TABLE usuarios(
-    id SERIAL UNIQUE,
+    id_usuario SERIAL UNIQUE,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
     tipo VARCHAR(10) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id_usuario)
 );
 
 INSERT INTO usuarios(nombre, apellido, email, password, tipo) VALUES('Admin', 'Admin', 'admin@admin.cl', 'admin123', 'admin');
 
 CREATE TABLE clientes(
-    id SERIAL UNIQUE,
+    id_cliente uuid DEFAULT uuid_generate_v4(),
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id_cliente)
 );
 
 INSERT INTO clientes(nombre, apellido, email) VALUES('Cliente', 'Gimenez', 'cliente.gimenez@gmail.com');
 
 CREATE TABLE productos(
-    id SERIAL UNIQUE,
+    id_producto SERIAL UNIQUE,
     nombre VARCHAR(50) NOT NULL,
-    marca_id INTEGER NOT NULL,
+    id_marca INTEGER NOT NULL,
     talla VARCHAR(50) NOT NULL,
     disciplina VARCHAR(50) NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(marca_id) REFERENCES marcas(id)
+    PRIMARY KEY(id_producto),
+    FOREIGN KEY(id_marca) REFERENCES marcas(id_marca)
 );
 
 
-INSERT INTO productos(nombre, marca_id, talla, disciplina) VALUES('Stereo Pro 120', (SELECT id FROM marcas WHERE nombre = 'CUBE'), 'M', 'Ciclismo');
+INSERT INTO productos(nombre, id_marca, talla, disciplina) VALUES('Stereo Pro 120', (SELECT id_marca FROM marcas WHERE nombre = 'CUBE'), 'M', 'Ciclismo');
 
 
 CREATE TABLE reservas(
-    id uuid DEFAULT uuid_generate_v4(),
-    id_cliente INT,
+    id_reserva uuid DEFAULT uuid_generate_v4(),
+    id_cliente uuid NOT NULL,
     id_producto INT,
     presupuesto INT,
     estado VARCHAR(50) NOT NULL,
-    comentario VARCHAR(50) NOT NULL,
+    comentario VARCHAR(50),
     fecha_reserva timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id),
-    FOREIGN KEY(id_cliente) REFERENCES clientes(id),
-    FOREIGN KEY(id_producto) REFERENCES productos(id)
+    PRIMARY KEY(id_reserva),
+    FOREIGN KEY(id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
 
 INSERT INTO reservas(
@@ -72,8 +72,8 @@ INSERT INTO reservas(
     estado,
     comentario
 ) VALUES(
-    (SELECT id FROM clientes WHERE nombre = 'Cliente'),
-    (SELECT id FROM productos WHERE nombre = 'Stereo Pro 120'),
+    (SELECT id_cliente FROM clientes WHERE nombre = 'Cliente'),
+    (SELECT id_producto FROM productos WHERE nombre = 'Stereo Pro 120'),
     1000000,
     'Pendiente',
     'Sin comentarios'
