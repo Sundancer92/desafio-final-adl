@@ -33,7 +33,7 @@ app.engine(
 	"handlebars",
 	exphbs.engine({
 		layoutsDir: __dirname + "/views",
-		partialsDir: __dirname + "/views/componentes/",
+		partialsDir: __dirname + "/views/componentes",
 	}),
 );
 // * FIN Configuracion de handlebars
@@ -44,22 +44,61 @@ app.listen(port, () => {
 });
 
 // ? --------------------- QUERYS ----------------------------
-const { getReservas } = require("./DB/querys");
+const { getReservas, postNuevaReserva, getCliente, getCamposPredefinidosFormularioSPC } = require("./DB/querys");
 // ? --------------------- FIN QUERYS ----------------------------
 
-// ! ---------------------RUTAS----------------------------
+// ! --------------------- RUTAS ----------------------------
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+	const camposPredefinidosFormulario = await getCamposPredefinidosFormularioSPC();
+
 	res.render("Inicio", {
 		layout: "Inicio",
+		sexo: camposPredefinidosFormulario.sexos,
+		disciplina: camposPredefinidosFormulario.disciplinas,
+		marca: camposPredefinidosFormulario.marcas,
+		componente: camposPredefinidosFormulario.componentes,
+		material: camposPredefinidosFormulario.materiales,
+		talla: camposPredefinidosFormulario.tallas,
 	});
 });
+
+
+
+// ! ------------------- FIN RUTAS ----------------------------
 
 // * API REST
 
 app.get("/reservas", async (req, res) => {
 	const reservas = await getReservas();
-	console.log("------- API GET RESERVAS --------");
-	console.log(reservas);
+
+	// console.log("------- API GET RESERVAS --------");
+	// console.log(reservas);
+
 	res.end(JSON.stringify(reservas));
+});
+
+app.post("/nuevaReserva", async (req, res) => {
+	// console.log("------- API POST NUEVA RESERVA --------");
+
+	const data = req.body;
+	const statusNuevaReserva = await postNuevaReserva(data);
+
+	console.log(statusNuevaReserva);
+
+});
+
+app.get("/buscarCliente", async (req, res) => {
+	console.log("------- API GET CLIENTE --------");
+	const id_cliente = req.query.id_cliente;
+
+
+	const cliente = await getCliente(id_cliente);
+
+	if(!cliente){
+		res.status(404)
+		res.send('no-content')
+	}
+
+	res.end(JSON.stringify(cliente));
 });

@@ -1,0 +1,120 @@
+<!-- Button trigger modal -->
+<div class="text-end">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Crear SPC
+  </button>
+</div>
+
+{{> FormularioSPC}}
+
+<script>
+
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', (e) => {
+    console.log("--------- NUEVA RESERVA SUBMIT BTN ---------");
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    console.log(data);
+    const url = '/nuevaReserva';
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if(res.status === 200) {
+          console.log('Reserva creada');
+          window.location.href = '/';
+        } else {
+          console.log('Error al crear reserva');
+        }
+      })
+
+  });
+
+  function buscarCliente() {
+    const id_cliente = document.querySelector('input[name="id_cliente"]').value;
+    console.log("--------- BUSCAR CLIENTE BTN ---------");
+    console.log(id_cliente);
+
+    const url = '/buscarCliente/?id_cliente=' + id_cliente;
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if(res.status === 200) {
+          return res.json();
+        } else {
+        document.querySelector('input[name="nombre_cliente"]').value = " ";
+        document.querySelector('input[name="nombre_cliente"]').removeAttribute("disabled")
+
+        document.querySelector('input[name="apellido_cliente"]').value = " ";
+        document.querySelector('input[name="apellido_cliente"]').removeAttribute("disabled")
+        
+        document.querySelector('input[name="email_cliente"]').value = " ";
+        document.querySelector('input[name="email_cliente"]').removeAttribute("disabled")
+        
+        document.querySelector('input[name="telefono_cliente"]').value = " ";
+        document.querySelector('input[name="telefono_cliente"]').removeAttribute("disabled")
+          
+        document.querySelector('select[name="sexo_cliente"]').value = "Sexo";
+        document.querySelector('select[name="sexo_cliente"]').removeAttribute("disabled")
+
+        console.log('Error al buscar cliente');
+        
+        }
+      })
+      .then(data => {
+        if(!!data){
+        document.querySelector('input[name="nombre_cliente"]').value = data.nombre;
+        document.querySelector('input[name="nombre_cliente"]').setAttribute("disabled", "");
+
+        document.querySelector('input[name="apellido_cliente"]').value = data.apellido;
+        document.querySelector('input[name="apellido_cliente"]').setAttribute("disabled", "");
+        
+        document.querySelector('input[name="email_cliente"]').value = data.email;
+        document.querySelector('input[name="email_cliente"]').setAttribute("disabled", "");
+        
+        document.querySelector('input[name="telefono_cliente"]').value = data.telefono;
+        document.querySelector('input[name="telefono_cliente"]').setAttribute("disabled", "");
+
+        document.querySelector('select[name="sexo_cliente"]').value = data.id_sexo;
+        document.querySelector('select[name="sexo_cliente"]').setAttribute("disabled", "");
+
+        }
+      })
+  }
+
+  function checkRut(rut) {
+    // Despejar Puntos
+    valor = rut.value.replace('.','');
+    // Despejar Guión
+    valor = valor.replace('-','');
+    
+    // Aislar Cuerpo y Dígito Verificador
+    cuerpo = valor.slice(0,-1);
+    dv = valor.slice(-1).toUpperCase();
+    
+    // Formatear RUN
+    rut.value = cuerpo + '-'+ dv    
+
+    return true;
+}
+
+
+
+</script>

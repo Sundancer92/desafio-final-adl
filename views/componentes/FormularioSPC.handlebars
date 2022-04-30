@@ -1,0 +1,190 @@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Creación SPC:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <form>
+
+          <h5>Datos Cliente:</h5>
+          <div class="row">
+
+            <div class="col-12">
+
+            </div class="row">
+              <div class="col-6">
+                <div class="col-12">Rut:</div>
+                <div class="input-group mb-3">
+                  <input type="text" name="id_cliente" oninput="checkRut(this)" class="form-control" required>
+                  <button class="btn btn-success" type="button" onclick="buscarCliente()">Buscar</button>
+                </div> 
+              </div>
+              <div class="col-6">
+
+                <div class="col-12">Sexo:</div>
+                  <select class="form-select m-auto" name="sexo_cliente">
+                    <option selected disabled hidden>Sexo</option>
+                    {{#each sexo}}
+                      <option value="{{this.nombre}}">{{this.nombre}}</option>
+                    {{/each}}
+                  </select>
+              </div>
+            </div>
+
+          <div class="row">
+            <div class="col-6 ">
+                <div class="col-12">Nombre:</div>
+                  <div class="col-12 m-auto">
+                    <input type="text" name="nombre_cliente" class="form-control" required/>
+                  </div>
+            </div>
+            <div class="col-6 ">
+                <div class="col-12">Apellido:</div>
+                  <div class="col-12 m-auto">
+                    <input type="text" name="apellido_cliente" class="form-control" required/>
+                  </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6 ">
+                <div class="col-12">e-Mail:</div>
+                  <div class="col-12 m-auto">
+                    <input type="email" name="email_cliente" class="form-control" required/>
+                  </div>
+            </div>
+            <div class="col-6 ">
+                <div class="col-12">Teléfono:</div>
+                  <div class="col-12 m-auto">
+                    <input type="tel" name="telefono_cliente" placeholder="56961858671" pattern="[0-9]{2}[0-9]{1}[0-9]{4}[0-9]{4}" class="form-control" required/>
+                  </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <h5>Producto:</h5>
+
+            <div class="row">
+              <div class="col-4 ">
+                  <div class="col-12">Disciplina:</div>
+                    <div class="col-12">
+                      <select class="form-select" name="disciplina_producto">
+                        <option selected disabled hidden>Disciplina</option>
+                        {{#each disciplina}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                  </div>
+              <div class="col-4 ">
+                  <div class="col-12">Marca:</div>
+                    <div class="col-12 m-auto">
+                      <select class="form-select" name="marca_producto">
+                        <option selected disabled hidden>Marca</option>
+                        {{#each marca}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                  </div>
+              <div class="col-4 ">
+                  <div class="col-12">Sexo:</div>
+                    <div class="col-12 m-auto">
+                      <select class="form-select" name="sexo_producto">
+                        <option selected disabled hidden>Sexo</option>
+                        {{#each sexo}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4 ">
+                  <div class="col-12">Componentes:</div>
+                    <div class="col-12 m-auto">
+                      <select class="form-select" name="componente_1_producto">
+                        <option selected disabled hidden>Componente</option>
+                        {{#each componente}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                </div>
+              <div class="col-4 ">
+                  <div class="col-12">Material:</div>
+                    <div class="col-12 m-auto">
+                      <select class="form-select" name="material_1_producto">
+                        <option selected disabled hidden>Material</option>
+                        {{#each material}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                </div>
+              <div class="col-4 ">
+                  <div class="col-12">Talla:</div>
+                    <div class="col-12 m-auto">
+                      <select class="form-select" name="talla_producto">
+                        <option selected disabled hidden>Talla</option>
+                        {{#each talla}}
+                          <option value="{{this.nombre}}">{{this.nombre}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                </div>
+            </div>
+
+          <hr>
+
+          <h5>Presupuesto:</h5>
+
+            <div class="row">
+              <div class="col-6 ">
+                  <div class="col-12">Minimo:</div>
+                    <div class="col-12 m-auto input-group">
+                      <span class="input-group-text">$</span>
+                        <input type="number" name="presupuesto_min_reserva" min="0" placeholder="0" class="form-control" />
+                  </div>                 
+              </div> 
+              <div class="col-6 ">
+                  <div class="col-12">Máximo:</div>
+                    <div class="col-12 m-auto input-group">
+                      <span class="input-group-text">$</span>
+                        <input type="number" name="presupuesto_max_reserva" min="0" placeholder="0" class="form-control" required/>
+                  </div>                    
+              </div> 
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="col-12">
+                    Comentarios:
+                </div>
+                <div class="col-12 m-auto">
+                  <textarea type="text" name="comentarios_reserva" class="form-control" /></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="my-2 text-end">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar Reserva</button>
+            </div>
+
+          </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+</script>

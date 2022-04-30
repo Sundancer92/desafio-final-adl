@@ -1,0 +1,65 @@
+
+<h1 class="text-center">Solicitudes Pedidos de Compra</h1>
+{{> BtnNuevaSPC}}
+<table class="table table-success table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Disciplina</th>
+			<th scope="col">Talla</th>
+			<th scope="col">Material</th>
+			<th scope="col">Presupuesto</th>
+			<th scope="col">Estado</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{! Cuerpo de la Tabla }}
+	</tbody>
+</table>
+
+<script>
+	const getData = async () => {
+		const response = await fetch('/reservas');
+		let data = await response.json();
+
+		/* DATA
+		  {
+			id_reserva: '4072e279-6f23-4d2f-aab8-f4a325d0ba4a',
+			id_cliente: '21.881.668-1',
+			id_producto: '67464279-e37d-49a1-91fd-b5a073e860ed',
+			disciplina: 'MTB',
+			presupuesto: 1000000,
+			estado: 'Cerrado',
+			comentario: 'Sin comentarios',
+			fecha_reserva: 2022-04-24T17:10:46.250Z,
+			nombre: 'Stereo Pro 120',
+			id_marca: 1,
+			talla: 'M'
+		}
+		*/
+
+		return data
+	}
+	
+	getData()
+	.then(data => {
+
+		let tabla = document.querySelector('tbody');
+		data.forEach(element => {
+			if(!element.estado || element.estado == "Cerrado"){
+				return;
+			}
+
+			let fila = document.createElement('tr');
+			fila.innerHTML = `
+				<td>${element.nombre}</td>
+				<td>${element.talla}</td>
+				<td>${element.disciplina}</td>
+				<td>${element.presupuesto.toLocaleString("es-CL", {style:"currency", currency:"CLP"})}</td>
+				<td>${element.estado}</td>
+			`
+			tabla.appendChild(fila);
+		});
+	})
+
+
+</script>
