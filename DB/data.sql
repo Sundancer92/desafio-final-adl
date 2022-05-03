@@ -17,7 +17,7 @@ INSERT INTO marcas(nombre, tipo_1) VALUES('Sram', 'Componente');
 INSERT INTO marcas(nombre, tipo_1) VALUES('Shimano', 'Componente');
 INSERT INTO marcas(nombre, tipo_1) VALUES('Magura', 'Componente');
 INSERT INTO marcas(nombre, tipo_1) VALUES('Syncross', 'Componente');
-INSERT INTO marcas(nombre, tipo_1) VALUES('Kilpi', ' Indumentaria');
+INSERT INTO marcas(nombre, tipo_1) VALUES('Kilpi', ' Ropa');
 INSERT INTO marcas(nombre, tipo_1) VALUES('ACID', 'Componente');
 INSERT INTO marcas(nombre, tipo_1) VALUES('RFR', 'Componente');
 
