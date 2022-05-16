@@ -1,18 +1,18 @@
 <!-- Button trigger modal -->
 <div class="text-end">
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Crear SPC
   </button>
 </div>
 
-{{> FormularioSPC}}
+{{> FormularioNuevaSPC}}
 
 <script>
 
   const form = document.querySelector('form');
 
   form.addEventListener('submit', (e) => {
-    console.log("--------- NUEVA RESERVA SUBMIT BTN ---------");
+    // console.log("--------- NUEVA RESERVA SUBMIT BTN ---------");
     e.preventDefault();
     const formData = new FormData(form);
     const data = {};
@@ -21,7 +21,6 @@
       data[key] = value;
     });
 
-    console.log(data);
     const url = '/nuevaReserva';
 
     fetch(url, {
@@ -44,8 +43,8 @@
 
   function buscarCliente() {
     const id_cliente = document.querySelector('input[name="id_cliente"]').value;
-    console.log("--------- BUSCAR CLIENTE BTN ---------");
-    console.log(id_cliente);
+    //    console.log("--------- BUSCAR CLIENTE BTN ---------");
+    //    console.log(id_cliente);
 
     const url = '/buscarCliente/?id_cliente=' + id_cliente;
 
@@ -71,7 +70,7 @@
         document.querySelector('input[name="telefono_cliente"]').value = " ";
         document.querySelector('input[name="telefono_cliente"]').removeAttribute("disabled")
           
-        document.querySelector('select[name="sexo_cliente"]').value = "Sexo";
+        document.querySelector('select[name="sexo_cliente"]').value = "Cualquiera";
         document.querySelector('select[name="sexo_cliente"]').removeAttribute("disabled")
 
         console.log('Error al buscar cliente');
@@ -79,6 +78,8 @@
         }
       })
       .then(data => {
+        console.log(data);
+
         if(!!data){
         document.querySelector('input[name="nombre_cliente"]').value = data.nombre;
         document.querySelector('input[name="nombre_cliente"]').setAttribute("disabled", "");

@@ -1,0 +1,203 @@
+			
+			<div class="modal fade" id="editarSPCid{{id_spc}}" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="p-2 flex-grow-1 bd-highlight align-bottom">
+								<h5 class="text-start">Solicitud:</h5>
+							</div>
+
+							<div class="p-2 bd-highlight ">
+								<div class="dropdown">
+									<select class="btn btn-success">
+										<option selected hidden>{{estado_spc}}</option>
+										{{#each @root.estados}}
+											<option>{{this.nombre}}</options>
+										{{/each}}
+									</select>
+								</div>
+							</div>
+							<div class="p-2 bd-highlight ">
+								<button type="button" class="btn btn-danger" id="btnEditarSPC" onclick="habilitarEdicion(this.value)" value="{{id_spc}}">Editar</button>
+							</div>
+						</div>
+
+
+						
+						<div class="modal-body text-start">
+
+						<form id="formEditarSPC{{id_spc}}">
+							<fieldset id="{{fieldsetSPCid_spc}}">
+							<h5>Cliente:</h5>
+							<div class="row">
+
+								<div class="col-12">
+
+								</div class="row">
+								<div class="col-6">
+									<div class="col-12">Rut:</div>
+									<div class="input-group mb-3">
+									<input type="text" name="rut_cliente" oninput="checkRut(this)" class="form-control" value="{{id_cliente}}" required >
+									</div> 
+								</div>
+								<div class="col-6">
+
+									<div class="col-12">Sexo:</div>
+									<select class="form-select m-auto" name="sexo_cliente">
+										<option selected hidden>{{sexo_cliente}}</option>
+										{{#each @root.sexos}}
+										<option value="{{this.nombre}}">{{this.nombre}}</option>
+										{{/each}}
+									</select>
+								</div>
+								</div>
+
+							<div class="row">
+								<div class="col-6 ">
+									<div class="col-12">Nombre:</div>
+									<div class="col-12 m-auto">
+										<input type="text" name="nombre_cliente" value="{{nombre_cliente}}" class="form-control" required />
+									</div>
+								</div>
+								<div class="col-6 ">
+									<div class="col-12">Apellido:</div>
+									<div class="col-12 m-auto">
+										<input type="text" name="apellido_cliente" value="{{apellido_cliente}}" class="form-control" required />
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-6 ">
+									<div class="col-12">e-Mail:</div>
+									<div class="col-12 m-auto">
+										<input type="email" name="email_cliente" value="{{email_cliente}}" class="form-control" required />
+									</div>
+								</div>
+								<div class="col-6 ">
+									<div class="col-12">Teléfono:</div>
+									<div class="col-12 m-auto">
+										<input type="tel" name="telefono_cliente" placeholder="56961858671" pattern="[0-9]{2}[0-9]{1}[0-9]{4}[0-9]{4}" value="{{telefono_cliente}}" class="form-control" required />
+									</div>
+								</div>
+							</div>
+
+							<hr>
+
+							<h5>Producto:</h5>
+
+								<div class="row">
+								<div class="col-4 ">
+									<div class="col-12">Disciplina:</div>
+										<div class="col-12">
+										<select class="form-select" name="disciplina_producto" required >
+											<option selected>{{disciplina_producto}}</option>
+											{{#each @root.disciplinas}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								<div class="col-4 ">
+									<div class="col-12">Marca:</div>
+										<div class="col-12 m-auto">
+										<select class="form-select" name="marca_producto" required >
+											<option selected disabled hidden>{{marca_producto}}</option>
+											{{#each @root.marcas}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								<div class="col-4 ">
+									<div class="col-12">Sexo:</div>
+										<div class="col-12 m-auto">
+										<select class="form-select" name="sexo_producto" required >
+											<option selected disabled hidden>{{sexo_producto}}</option>
+											{{#each @root.sexos}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+								<div class="col-4 ">
+									<div class="col-12">Componentes:</div>
+										<div class="col-12 m-auto">
+										<select class="form-select" name="componente_1_producto" required >
+											<option selected disabled hidden>{{componente_1_producto}}</option>
+											{{#each @root.componentes}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								<div class="col-4 ">
+									<div class="col-12">Material:</div>
+										<div class="col-12 m-auto">
+										<select class="form-select" name="material_1_producto" required >
+											<option selected disabled hidden>{{material_1_producto}}</option>
+											{{#each @root.materiales}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								<div class="col-4 ">
+									<div class="col-12">Talla:</div>
+										<div class="col-12 m-auto">
+										<select class="form-select" name="talla_producto">
+											<option selected disabled hidden>{{talla_producto}}</option>
+											{{#each @root.tallas}}
+											<option value="{{this.nombre}}">{{this.nombre}}</option>
+											{{/each}}
+										</select>
+										</div>
+									</div>
+								</div>
+
+							<hr>
+
+							<h5>Presupuesto:</h5>
+
+								<div class="row">
+								<div class="col-6 ">
+									<div class="col-12">Minimo:</div>
+										<div class="col-12 m-auto input-group">
+										<span class="input-group-text">$</span>
+											<input type="number" name="presupuesto_min_reserva" min="0" placeholder="0" value="{{presupuesto_min}}" class="form-control" required />
+									</div>                 
+								</div> 
+								<div class="col-6 ">
+									<div class="col-12">Máximo:</div>
+										<div class="col-12 m-auto input-group">
+										<span class="input-group-text">$</span>
+											<input type="number" name="presupuesto_max_reserva" min="0" placeholder="0" value="{{presupuesto_max}}" class="form-control" required />
+									</div>                    
+								</div> 
+								</div>
+
+								<div class="row">
+								<div class="col-12">
+									<div class="col-12">
+										Comentarios:
+									</div>
+									<div class="col-12 m-auto">
+									<textarea type="text" name="comentarios_reserva" class="form-control" />{{comentario}}</textarea>
+									</div>
+								</div>
+								</div>
+
+								<div class="my-2 text-end">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+									<button type="submit" class="btn btn-primary">Actualizar Solicitud</button>
+								</div>
+
+								</fieldset>
+							</form>  
+						</div>
+					</div>
+				</div>
+			</div>

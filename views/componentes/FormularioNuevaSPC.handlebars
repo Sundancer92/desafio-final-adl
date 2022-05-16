@@ -27,8 +27,8 @@
 
                 <div class="col-12">Sexo:</div>
                   <select class="form-select m-auto" name="sexo_cliente">
-                    <option selected disabled hidden>Sexo</option>
-                    {{#each sexo}}
+                    <option selected>Cualquiera</option>
+                    {{#each sexos}}
                       <option value="{{this.nombre}}">{{this.nombre}}</option>
                     {{/each}}
                   </select>
@@ -73,9 +73,8 @@
               <div class="col-4 ">
                   <div class="col-12">Disciplina:</div>
                     <div class="col-12">
-                      <select class="form-select" name="disciplina_producto">
-                        <option selected disabled hidden>Disciplina</option>
-                        {{#each disciplina}}
+                      <select class="form-select" name="disciplina_producto" required>
+                        {{#each disciplinas}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -84,9 +83,8 @@
               <div class="col-4 ">
                   <div class="col-12">Marca:</div>
                     <div class="col-12 m-auto">
-                      <select class="form-select" name="marca_producto">
-                        <option selected disabled hidden>Marca</option>
-                        {{#each marca}}
+                      <select class="form-select" name="marca_producto" required>
+                        {{#each marcas}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -95,9 +93,8 @@
               <div class="col-4 ">
                   <div class="col-12">Sexo:</div>
                     <div class="col-12 m-auto">
-                      <select class="form-select" name="sexo_producto">
-                        <option selected disabled hidden>Sexo</option>
-                        {{#each sexo}}
+                      <select class="form-select" name="sexo_producto" required>
+                        {{#each sexos}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -109,9 +106,8 @@
               <div class="col-4 ">
                   <div class="col-12">Componentes:</div>
                     <div class="col-12 m-auto">
-                      <select class="form-select" name="componente_1_producto">
-                        <option selected disabled hidden>Componente</option>
-                        {{#each componente}}
+                      <select class="form-select" name="componente_1_producto" required>
+                        {{#each componentes}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -120,9 +116,8 @@
               <div class="col-4 ">
                   <div class="col-12">Material:</div>
                     <div class="col-12 m-auto">
-                      <select class="form-select" name="material_1_producto">
-                        <option selected disabled hidden>Material</option>
-                        {{#each material}}
+                      <select class="form-select" name="material_1_producto" required>
+                        {{#each materiales}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -132,8 +127,7 @@
                   <div class="col-12">Talla:</div>
                     <div class="col-12 m-auto">
                       <select class="form-select" name="talla_producto">
-                        <option selected disabled hidden>Talla</option>
-                        {{#each talla}}
+                        {{#each tallas}}
                           <option value="{{this.nombre}}">{{this.nombre}}</option>
                         {{/each}}
                       </select>
@@ -150,7 +144,7 @@
                   <div class="col-12">Minimo:</div>
                     <div class="col-12 m-auto input-group">
                       <span class="input-group-text">$</span>
-                        <input type="number" name="presupuesto_min_reserva" min="0" placeholder="0" class="form-control" />
+                        <input type="number" name="presupuesto_min_reserva" min="0" placeholder="0" class="form-control" required/>
                   </div>                 
               </div> 
               <div class="col-6 ">
@@ -184,7 +178,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  
-</script>
