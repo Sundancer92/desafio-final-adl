@@ -39,12 +39,15 @@ CREATE TABLE disciplinas(
     PRIMARY KEY(id_disciplina)
 );
 
+
+INSERT INTO disciplinas(nombre) VALUES('Cualquiera');
 INSERT INTO disciplinas(nombre) VALUES('Ruta');
 INSERT INTO disciplinas(nombre) VALUES('MTB');
 INSERT INTO disciplinas(nombre) VALUES('Gravel');
 INSERT INTO disciplinas(nombre) VALUES('Downhill');
 INSERT INTO disciplinas(nombre) VALUES('Enduro');
 INSERT INTO disciplinas(nombre) VALUES('Cross Country');
+INSERT INTO disciplinas(nombre) VALUES('Niño');
 
 CREATE TABLE tallas(
     id_talla SERIAL UNIQUE,
@@ -119,9 +122,9 @@ CREATE TABLE estados_spc(
 );
 
 INSERT INTO estados_spc(nombre) VALUES('Abierto');
+INSERT INTO estados_spc(nombre) VALUES('En CD');
 INSERT INTO estados_spc(nombre) VALUES('Cancelado');
-INSERT INTO estados_spc(nombre) VALUES('Pendiente');
-INSERT INTO estados_spc(nombre) VALUES('Vendido');
+INSERT INTO estados_spc(nombre) VALUES('Cerrado');
 
 CREATE TABLE solicitud_pedido_cliente(
     id_spc uuid DEFAULT uuid_generate_v4(),
