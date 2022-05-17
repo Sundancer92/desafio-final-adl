@@ -13,7 +13,7 @@
 
   form.addEventListener('submit', (e) => {
     // console.log("--------- NUEVA RESERVA SUBMIT BTN ---------");
-    e.preventDefault();
+    //e.preventDefault();
     const formData = new FormData(form);
     const data = {};
 
@@ -33,7 +33,7 @@
       .then(res => {
         if(res.status === 200) {
           console.log('Reserva creada');
-          window.location.href = '/';
+          location.reload();
         } else {
           console.log('Error al crear reserva');
         }
