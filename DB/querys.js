@@ -1,16 +1,10 @@
 require("dotenv").config();
 
 const { Pool } = require("pg");
-const pool = new Pool({
-	connectionString: process.env.DATABASE_URL,
-	ssl: {
-		rejectUnauthorized: false,
-	},
-});
+const pool = new Pool();
 
 const getReservas = async () => {
-	const consulta =
-	`SELECT
+	const consulta = `SELECT
 	spc.id_spc,
 	spc.presupuesto_max AS presupuesto_max,
 	spc.presupuesto_min AS presupuesto_min,
@@ -125,12 +119,12 @@ const postNuevaReserva = async (data) => {
 	const crearSPC = `INSERT INTO solicitud_pedido_cliente 
 		(id_cliente, id_producto, presupuesto_min, presupuesto_max, id_estado, comentario) 
 		VALUES 
-		('$1',
-		'$2',
+		($1,
+		$2,
 		$3,
 		$4,
-		(SELECT id_estado FROM estados_spc WHERE nombre='$5'),
-		'$6') 
+		(SELECT id_estado FROM estados_spc WHERE nombre=$5),
+		$6) 
 		RETURNING *`;
 
 	try {
@@ -144,8 +138,8 @@ const postNuevaReserva = async (data) => {
 				data.email_cliente,
 				data.telefono_cliente,
 				data.sexo_cliente,
-				]);
-			}
+			]);
+		}
 
 		const respuestaCrearProducto = await pool.query(crearProducto, [
 			data.marca_producto,
@@ -200,9 +194,9 @@ const getCliente = async (id_cliente) => {
 };
 
 const getDetalleSPC = async (id_spc) => {
-	const consulta =
-	`SELECT
+	const consulta = `SELECT
 	spc.id_spc,
+	spc.id_producto AS id_producto,
 	spc.presupuesto_max AS presupuesto_max,
 	spc.presupuesto_min AS presupuesto_min,
 	spc.comentario AS comentario,
@@ -250,7 +244,7 @@ FROM
 	// console.log(respuesta.rows[0]);
 
 	return respuesta.rows[0];
-}
+};
 
 const actualizarEstadoSPC = async (data) => {
 	//console.log("-------- QUERY ACTUALIZAR ESTADO --------");
@@ -276,14 +270,108 @@ const actualizarEstadoSPC = async (data) => {
 			data.id_spc,
 		]);
 		pool.query("COMMIT");
-
 	} catch (error) {
 		pool.query("ROLLBACK");
 		console.log("-------- ERROR ACTUALIZAR ESTADO --------");
 		console.log(error);
 	}
 	return true;
-}
+};
+
+const actualizarSPC = async (id_spc, data) => {
+	console.log("-------- QUERY ACTUALIZAR SPC --------");
+	//console.log(id_spc);
+	console.log(data)
+
+	/*{
+  id_producto: '0665a339-7a33-4a0f-9517-4317a0e623b2',
+  sexo_cliente: 'Cualquiera',
+  nombre_cliente: ' Lourdes',
+  apellido_cliente: 'Agua',
+  email_cliente: 'alugua@email.com',
+  telefono_cliente: '99548763855',
+  disciplina_producto: 'Cross Country',
+  marca_producto: 'Liv',
+  sexo_producto: 'Mujer',
+  componente_1_producto: 'Magura',
+  material_1_producto: 'Carbono',
+  talla_producto: 'S',
+  presupuesto_min_reserva: '1000000',
+  presupuesto_max_reserva: '2000000',
+  comentarios_reserva: ''
+}*/
+
+	const actualizarCliente = `
+	UPDATE clientes
+	SET nombre = $1,
+	apellido = $2,
+	telefono = $3,
+	email = $4,
+	id_sexo = (SELECT id_sexo FROM sexos WHERE nombre = $5 LIMIT 1)
+	WHERE id_cliente = $6
+	`;
+
+	const actualizarProducto = `
+	UPDATE productos
+	SET id_disciplina_1 = (SELECT id_disciplina FROM disciplinas WHERE nombre = $1),
+	id_marca = (SELECT id_marca FROM marcas WHERE nombre = $2 LIMIT 1),
+	id_sexo = (SELECT id_sexo FROM sexos WHERE nombre = $3),
+	id_prioridad_componente_1 = (SELECT id_marca FROM marcas WHERE nombre = $4 LIMIT 1),
+	id_material = (SELECT id_material FROM materiales WHERE nombre = $5),
+	id_talla = (SELECT id_talla FROM tallas WHERE nombre = $6)
+	WHERE id_producto = $7
+	`;
+
+	const actualizarSPC = `
+	UPDATE solicitud_pedido_cliente
+	SET presupuesto_min = $1,
+	presupuesto_max = $2,
+	comentario = $3
+	WHERE id_spc = $4
+	`;
+
+	try {
+		pool.query("BEGIN");
+		const respuestaActualizarCliente = await pool.query(actualizarCliente, [
+			data.nombre_cliente,
+			data.apellido_cliente,
+			data.telefono_cliente,
+			data.email_cliente,
+			data.sexo_cliente,
+			data.id_cliente,
+		]);
+		// console.log("-------- RESPUESTA ACTUALIZAR CLIENTE --------");
+		// console.log(respuestaActualizarCliente);
+
+		const respuestaActualizarProducto = await pool.query(actualizarProducto, [
+			data.disciplina_producto,
+			data.marca_producto,
+			data.sexo_producto,
+			data.componente_1_producto,
+			data.material_1_producto,
+			data.talla_producto,
+			data.id_producto,
+		]);
+
+		console.log("-------- RESPUESTA ACTUALIZAR PRODUCTO --------");
+		console.log(respuestaActualizarProducto);
+
+		const respuestaActualizarSPC = await pool.query(actualizarSPC, [
+			data.presupuesto_min_reserva,
+			data.presupuesto_max_reserva,
+			data.comentarios_reserva,
+			id_spc,
+		]);
+
+		console.log("-------- RESPUESTA ACTUALIZAR SPC --------");
+		console.log(respuestaActualizarSPC);
+
+		pool.query("COMMIT");
+	} catch (error) {
+		console.log("-------- ERROR ACTUALIZAR CLIENTE --------");
+		console.log(error);
+	}
+};
 
 module.exports = {
 	getReservas,
@@ -292,4 +380,5 @@ module.exports = {
 	getCamposPredefinidosFormularioSPC,
 	getDetalleSPC,
 	actualizarEstadoSPC,
+	actualizarSPC,
 };

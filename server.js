@@ -14,7 +14,7 @@ app.use(cookieParser());
 const port = process.env.PORT || 3000;
 // * Puerto para heroku
 
-app.use("/public", express.static(__dirname + "/public"));
+app.use("/static", express.static("public"));
 
 // * Invocacion bootstrap
 app.use(
@@ -52,6 +52,7 @@ const {
 	getCamposPredefinidosFormularioSPC,
 	getDetalleSPC,
 	actualizarEstadoSPC,
+	actualizarSPC,
 } = require("./DB/querys");
 // ? --------------------- FIN QUERYS ----------------------------
 
@@ -177,4 +178,25 @@ app.put("/actualizarEstado", async (req, res) => {
 		res.status(500);
 		res.send("ERROR");
 	}
+})
+
+app.put("/actualizarSPC/:id", async (req, res) => {
+	const id_spc = req.params.id;
+	const data = req.body;
+
+	 console.log("------- API ACTUALIZAR SPC --------");
+	 console.log(data);
+
+	/*
+	*/
+
+	 const respuestaActualizarSPC = await actualizarSPC(id_spc, data);
+
+	// if (statusActualizarSPC) {
+	// 	res.status(200);
+	// 	res.send("OK");
+	// } else {
+	// 	res.status(500);
+	// 	res.send("ERROR");
+	// }
 })
