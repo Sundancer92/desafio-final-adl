@@ -124,13 +124,14 @@ const postNuevaReserva = async (data) => {
 	const crearSPC = `INSERT INTO solicitud_pedido_cliente 
 		(id_cliente, id_producto, presupuesto_min, presupuesto_max, id_estado, comentario) 
 		VALUES 
-		($1,
-		$2,
-		$3,
-		$4,
-		(SELECT id_estado FROM estados_spc WHERE nombre=$5),
-		$6) 
-		RETURNING *`;
+		(
+			$1,
+			$2,
+			$3,
+			$4,
+			(SELECT id_estado FROM estados_spc WHERE nombre=$5),
+			$6
+		) RETURNING *`;
 
 	try {
 		pool.query("BEGIN");
@@ -160,7 +161,7 @@ const postNuevaReserva = async (data) => {
 			respuestaCrearProducto.rows[0].id_producto,
 			data.presupuesto_min_reserva,
 			data.presupuesto_max_reserva,
-			"Pendiente",
+			"Abierto",
 			data.comentarios_reserva,
 		]);
 
