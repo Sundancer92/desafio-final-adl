@@ -16,10 +16,13 @@
 				</div>
 			</div>
 			<div class="p-1 text-end">
-				<button type="button" class="btn btn-danger" onclick="habilitarEdicion()">Editar</button>
+				<button type="button" class="btn btn-warning" onclick="habilitarEdicion()">Editar</button>
 			</div>
 			<div class="p-1 text-end">
-				<a type="button" class="btn btn-warning" href="/dashboard">Cerrar</a>
+				<button type="button" class="btn btn-danger" onclick="eliminarSPC()">Eliminar</button>
+			</div>
+			<div class="p-1 text-end">
+				<a type="button" class="btn" href="/dashboard">X</a>
 			</div>
 		</div>
 		<hr>
@@ -95,7 +98,7 @@
 							<div class="col-12">Disciplina:</div>
 								<div class="col-12">
 								<select class="form-select" name="disciplina_producto" required >
-									<option selected>{{disciplina_producto}}</option>
+									<option selected hidden>{{disciplina_producto}}</option>
 									{{#each @root.disciplinas}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -106,7 +109,7 @@
 							<div class="col-12">Marca:</div>
 								<div class="col-12 m-auto">
 								<select class="form-select" name="marca_producto" required >
-									<option selected disabled hidden>{{marca_producto}}</option>
+									<option selected hidden>{{marca_producto}}</option>
 									{{#each @root.marcas}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -117,7 +120,7 @@
 							<div class="col-12">Sexo:</div>
 								<div class="col-12 m-auto">
 								<select class="form-select" name="sexo_producto" required >
-									<option selected disabled hidden>{{sexo_producto}}</option>
+									<option selected hidden>{{sexo_producto}}</option>
 									{{#each @root.sexos}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -131,7 +134,7 @@
 							<div class="col-12">Componentes:</div>
 								<div class="col-12 m-auto">
 								<select class="form-select" name="componente_1_producto" required >
-									<option selected disabled hidden>{{componente_1_producto}}</option>
+									<option selected hidden>{{componente_1_producto}}</option>
 									{{#each @root.componentes}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -142,7 +145,7 @@
 							<div class="col-12">Material:</div>
 								<div class="col-12 m-auto">
 								<select class="form-select" name="material_1_producto" required >
-									<option selected disabled hidden>{{material_1_producto}}</option>
+									<option selected hidden>{{material_1_producto}}</option>
 									{{#each @root.materiales}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -153,7 +156,7 @@
 							<div class="col-12">Talla:</div>
 								<div class="col-12 m-auto">
 								<select class="form-select" name="talla_producto">
-									<option selected disabled hidden>{{talla_producto}}</option>
+									<option selected hidden>{{talla_producto}}</option>
 									{{#each @root.tallas}}
 									<option value="{{this.nombre}}">{{this.nombre}}</option>
 									{{/each}}
@@ -211,6 +214,7 @@
 		console.log("--------- HABLITAR EDICION ---------");
 		let fieldsetSPC = document.getElementsByTagName("fieldset")[0];
 		fieldsetSPC.disabled ? fieldsetSPC.disabled = false : fieldsetSPC.disabled = true;
+
 	}
 
 	function actualizarEstadoSPC(value){
@@ -235,6 +239,27 @@
 		//console.log("--------- FIN DATA ACTUALIZAR ESTADO SPC ---------");
 	}
 
+	function eliminarSPC(){
+		//console.log("--------- DATA ELIMINAR SPC ---------");
+		const url = "/eliminarSPC"
+		const data = {
+			id_spc: "{{id_spc}}"
+		}
+
+		fetch(url, {
+			method: 'DELETE',
+			body: JSON.stringify({data}),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}).then(res => res.json(
+				window.location.href = "/dashboard"
+			))
+			.catch(error => console.error('Error:', error))
+
+		//console.log("--------- FIN DATA ELIMINAR SPC ---------");
+	}
+
 	const form = document.getElementById("{{id_spc}}");
 
 	form.addEventListener('submit', (e) => {
@@ -244,6 +269,7 @@
 		
 		formData.forEach((value, key) => {
 			data[key] = value;
+			console.log("-------------")
 		});
 
 		const url = "/actualizarSPC/{{id_spc}}";
@@ -254,15 +280,18 @@
 			headers: {
 				'Content-Type': 'application/json'
 			}
-		})/*
+		})
 			.then(res => {
 				if(res.status === 200){
 					console.log("--------- ACTUALIZADO SPC ---------");
 					window.location.href = "/dashboard";
 				} else {
+					alert("Error al actualizar SPC");
 					console.log("--------- ERROR ACTUALIZAR SPC ---------");
 				}
-			})*/
+			})
 
 	})
+
+
 </script>

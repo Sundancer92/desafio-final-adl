@@ -53,6 +53,7 @@ const {
 	getDetalleSPC,
 	actualizarEstadoSPC,
 	actualizarSPC,
+	eliminarSPC,
 } = require("./DB/querys");
 // ? --------------------- FIN QUERYS ----------------------------
 
@@ -99,7 +100,7 @@ app.get("/detalle-spc/:id", async (req, res) => {
 	const camposPredefinidosFormulario =
 		await getCamposPredefinidosFormularioSPC();
 
-		// console.log(detalleSPC);
+	// console.log(detalleSPC);
 
 	res.render("DetalleSPC", {
 		layout: "DetalleSPC",
@@ -129,9 +130,8 @@ app.get("/detalle-spc/:id", async (req, res) => {
 		tallas: camposPredefinidosFormulario.tallas,
 		estados: camposPredefinidosFormulario.estados,
 		predefinidos: camposPredefinidosFormulario,
-
-	})
-})
+	});
+});
 
 // ! ------------------- FIN RUTAS ----------------------------
 
@@ -178,25 +178,37 @@ app.put("/actualizarEstado", async (req, res) => {
 		res.status(500);
 		res.send("ERROR");
 	}
-})
+});
 
 app.put("/actualizarSPC/:id", async (req, res) => {
 	const id_spc = req.params.id;
 	const data = req.body;
 
-	 console.log("------- API ACTUALIZAR SPC --------");
-	 console.log(data);
+	//console.log("------- API ACTUALIZAR SPC --------");
+	//console.log(data);
 
-	/*
-	*/
+	const respuestaActualizarSPC = await actualizarSPC(id_spc, data);
 
-	 const respuestaActualizarSPC = await actualizarSPC(id_spc, data);
+	if (respuestaActualizarSPC) {
+		res.status(200);
+		res.send("OK");
+	} else {
+		res.status(500);
+		res.send("ERROR");
+	}
+});
 
-	// if (statusActualizarSPC) {
-	// 	res.status(200);
-	// 	res.send("OK");
-	// } else {
-	// 	res.status(500);
-	// 	res.send("ERROR");
-	// }
-})
+app.delete("/eliminarSPC", async (req, res) => {
+	const id_spc = req.body.data.id_spc;
+	//console.log("------- API ELIMINAR SPC --------");
+
+	const respuestaEliminarSPC = await eliminarSPC(id_spc);
+
+	if (respuestaEliminarSPC) {
+		res.status(200);
+		res.send("OK");
+	} else {
+		res.status(500);
+		res.send("ERROR");
+	}
+});

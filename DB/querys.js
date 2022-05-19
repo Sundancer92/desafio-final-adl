@@ -166,10 +166,12 @@ const postNuevaReserva = async (data) => {
 		]);
 
 		pool.query("COMMIT");
+		return true;
 	} catch (error) {
 		console.log("-------- ERROR CREAR CLIENTE --------");
 		pool.query("ROLLBACK");
 		console.log(error);
+		return false;
 	}
 };
 
@@ -285,27 +287,9 @@ const actualizarEstadoSPC = async (data) => {
 };
 
 const actualizarSPC = async (id_spc, data) => {
-	console.log("-------- QUERY ACTUALIZAR SPC --------");
+	//console.log("-------- QUERY ACTUALIZAR SPC --------");
 	//console.log(id_spc);
-	console.log(data)
-
-	/*{
-  id_producto: '0665a339-7a33-4a0f-9517-4317a0e623b2',
-  sexo_cliente: 'Cualquiera',
-  nombre_cliente: ' Lourdes',
-  apellido_cliente: 'Agua',
-  email_cliente: 'alugua@email.com',
-  telefono_cliente: '99548763855',
-  disciplina_producto: 'Cross Country',
-  marca_producto: 'Liv',
-  sexo_producto: 'Mujer',
-  componente_1_producto: 'Magura',
-  material_1_producto: 'Carbono',
-  talla_producto: 'S',
-  presupuesto_min_reserva: '1000000',
-  presupuesto_max_reserva: '2000000',
-  comentarios_reserva: ''
-}*/
+	//console.log(data);
 
 	const actualizarCliente = `
 	UPDATE clientes
@@ -320,9 +304,9 @@ const actualizarSPC = async (id_spc, data) => {
 	const actualizarProducto = `
 	UPDATE productos
 	SET id_disciplina_1 = (SELECT id_disciplina FROM disciplinas WHERE nombre = $1),
-	id_marca = (SELECT id_marca FROM marcas WHERE nombre = $2 LIMIT 1),
+	id_marca = (SELECT id_marca FROM marcas WHERE nombre=$2 LIMIT 1),
 	id_sexo = (SELECT id_sexo FROM sexos WHERE nombre = $3),
-	id_prioridad_componente_1 = (SELECT id_marca FROM marcas WHERE nombre = $4 LIMIT 1),
+	id_prioridad_componente_1 = (SELECT id_marca FROM marcas WHERE nombre=$4 LIMIT 1),
 	id_material = (SELECT id_material FROM materiales WHERE nombre = $5),
 	id_talla = (SELECT id_talla FROM tallas WHERE nombre = $6)
 	WHERE id_producto = $7
@@ -359,8 +343,8 @@ const actualizarSPC = async (id_spc, data) => {
 			data.id_producto,
 		]);
 
-		console.log("-------- RESPUESTA ACTUALIZAR PRODUCTO --------");
-		console.log(respuestaActualizarProducto);
+		//console.log("-------- RESPUESTA ACTUALIZAR PRODUCTO --------");
+		//console.log(respuestaActualizarProducto);
 
 		const respuestaActualizarSPC = await pool.query(actualizarSPC, [
 			data.presupuesto_min_reserva,
@@ -369,15 +353,33 @@ const actualizarSPC = async (id_spc, data) => {
 			id_spc,
 		]);
 
-		console.log("-------- RESPUESTA ACTUALIZAR SPC --------");
-		console.log(respuestaActualizarSPC);
+		//console.log("-------- RESPUESTA ACTUALIZAR SPC --------");
+		//console.log(respuestaActualizarSPC);
 
 		pool.query("COMMIT");
+		return true;
 	} catch (error) {
 		console.log("-------- ERROR ACTUALIZAR CLIENTE --------");
 		console.log(error);
 	}
 };
+
+const eliminarSPC = async (id_spc) => {
+	//console.log("-------- QUERY ELIMINAR SPC --------");
+	//console.log(id_spc);
+
+	const consulta = `
+	DELETE FROM solicitud_pedido_cliente
+	WHERE id_spc = $1
+	`;
+
+	const respuesta = await pool.query(consulta, [id_spc]);
+
+	//console.log("-------- RESPUESTA ELIMINAR SPC --------");
+	//console.log(respuesta);
+
+	return true;
+}
 
 module.exports = {
 	getReservas,
@@ -387,4 +389,5 @@ module.exports = {
 	getDetalleSPC,
 	actualizarEstadoSPC,
 	actualizarSPC,
+	eliminarSPC,
 };
