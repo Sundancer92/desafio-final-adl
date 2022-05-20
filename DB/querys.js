@@ -49,7 +49,8 @@ FROM
 	INNER JOIN marcas marca
 	ON producto.id_marca = marca.id_marca
 	INNER JOIN marcas componente_1
-	ON producto.id_prioridad_componente_1 = componente_1.id_marca;
+	ON producto.id_prioridad_componente_1 = componente_1.id_marca
+	ORDER BY spc.fecha_reserva DESC;
 	`;
 
 	const respuesta = await pool.query(consulta);
@@ -381,6 +382,45 @@ const eliminarSPC = async (id_spc) => {
 	return true;
 }
 
+const comprobarLogIN = async (correo, contrasena) => {
+	// console.log("-------- QUERY COMPROBAR LOGIN --------");
+
+	const buscarUsuario = `
+	SELECT * FROM usuarios
+	WHERE correo = $1
+	AND contrasena = $2
+	`;
+
+	const buscarRolUsuario = `
+		SELECT nombre
+		FROM roles_usuarios
+		WHERE id_rol = $1
+	`
+	try{
+		pool.query("BEGIN");
+		const respuestaBuscarUsuario = await pool.query(buscarUsuario, [correo, contrasena]);
+
+		if(respuestaBuscarUsuario.rows.length > 0){
+			const respuestaBuscarRolUsuario = await pool.query(buscarRolUsuario, [respuestaBuscarUsuario.rows[0].id_rol_usuario]);
+			//console.log("-------- RESPUESTA Buscar USUARIO --------");
+			
+		pool.query("COMMIT");
+			return {
+				id_usuario: respuestaBuscarUsuario.rows[0].id_usuario,
+				nombre: respuestaBuscarUsuario.rows[0].nombre,
+				correo: respuestaBuscarUsuario.rows[0].correo,
+				contrasena: respuestaBuscarUsuario.rows[0].contrasena,
+				rol_usuario: respuestaBuscarRolUsuario.rows[0].nombre,
+			}
+		}
+
+	} catch(error) {
+		pool.query("ROLLBACK");
+		console.log("-------- ERROR COMPROBAR LOGIN --------");
+		return {error: error}
+	}
+}
+
 module.exports = {
 	getReservas,
 	postNuevaReserva,
@@ -390,4 +430,5 @@ module.exports = {
 	actualizarEstadoSPC,
 	actualizarSPC,
 	eliminarSPC,
+	comprobarLogIN,
 };

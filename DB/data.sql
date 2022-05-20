@@ -9,6 +9,7 @@ CREATE TABLE marcas(
     PRIMARY KEY(id_marca)
 );
 
+
 INSERT INTO marcas(nombre, tipo_1) VALUES('Cualquiera', 'Cuadro');
 INSERT INTO marcas(nombre, tipo_1) VALUES('CUBE', 'Cuadro');
 INSERT INTO marcas(nombre, tipo_1) VALUES('Giant', 'Cuadro');
@@ -23,6 +24,7 @@ INSERT INTO marcas(nombre, tipo_1) VALUES('Kilpi', ' Ropa');
 INSERT INTO marcas(nombre, tipo_1) VALUES('ACID', 'Componente');
 INSERT INTO marcas(nombre, tipo_1) VALUES('RFR', 'Componente');
 
+
 CREATE TABLE sexos(
     id_sexo SERIAL UNIQUE,
     nombre VARCHAR(10) NOT NULL,
@@ -32,6 +34,7 @@ CREATE TABLE sexos(
 INSERT INTO sexos(nombre) VALUES('Cualquiera');
 INSERT INTO sexos(nombre) VALUES('Hombre');
 INSERT INTO sexos(nombre) VALUES('Mujer');
+
 
 CREATE TABLE disciplinas(
     id_disciplina SERIAL UNIQUE,
@@ -81,6 +84,7 @@ INSERT INTO materiales(nombre) VALUES('Cualquiera');
 INSERT INTO materiales(nombre) VALUES('Aluminio');
 INSERT INTO materiales(nombre) VALUES('Carbono');
 
+
 CREATE TABLE clientes(
     id_cliente VARCHAR(11) UNIQUE,
     nombre VARCHAR(50) NOT NULL,
@@ -92,7 +96,6 @@ CREATE TABLE clientes(
     FOREIGN KEY(id_sexo) REFERENCES sexos(id_sexo)
 );
 
-INSERT INTO clientes(id_cliente, nombre, apellido, email, telefono, id_sexo) VALUES('21881668-0','Cliente', 'Gimenez', 'cliente.gimenez@gmail.com', '9888888', (SELECT id_sexo FROM sexos WHERE nombre = 'Hombre'));
 
 CREATE TABLE productos(
     id_producto uuid DEFAULT uuid_generate_v4(),
@@ -115,6 +118,7 @@ CREATE TABLE productos(
     FOREIGN KEY(id_sexo) REFERENCES sexos(id_sexo)
 );
 
+
 CREATE TABLE estados_spc(
     id_estado SERIAL UNIQUE,
     nombre VARCHAR(9) NOT NULL,
@@ -125,6 +129,7 @@ INSERT INTO estados_spc(nombre) VALUES('Abierto');
 INSERT INTO estados_spc(nombre) VALUES('En CD');
 INSERT INTO estados_spc(nombre) VALUES('Cancelado');
 INSERT INTO estados_spc(nombre) VALUES('Cerrado');
+
 
 CREATE TABLE solicitud_pedido_cliente(
     id_spc uuid DEFAULT uuid_generate_v4(),
@@ -140,3 +145,45 @@ CREATE TABLE solicitud_pedido_cliente(
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto),
     FOREIGN KEY(id_estado) REFERENCES estados_spc(id_estado)
 );
+
+
+CREATE TABLE roles_usuarios(
+    id_rol SERIAL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    PRIMARY KEY(id_rol)
+);
+
+INSERT INTO roles_usuarios(nombre) 
+VALUES
+('Administrador'),
+('Tienda');
+
+CREATE TABLE usuarios(
+    id_usuario SERIAL UNIQUE,
+    id_rol_usuario INT NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    correo VARCHAR(50) NOT NULL,
+    contrasena VARCHAR(50) NOT NULL,
+    PRIMARY KEY(id_usuario),
+    FOREIGN KEY(id_rol_usuario) REFERENCES roles_usuarios(id_rol)
+);
+
+INSERT INTO usuarios (
+    id_rol_usuario,
+    nombre,
+    correo,
+    contrasena
+)
+VALUES
+    (  
+        (SELECT id_rol FROM roles_usuarios WHERE nombre = 'Administrador'),
+        'Administrador',
+        'admin@grylan.cl',
+        'admin'
+    ),
+    (
+        (SELECT id_rol FROM roles_usuarios WHERE nombre = 'Tienda'),
+        'BeCycling Padre Hurtado',
+        'becyclingpadrehurtado@grylan.cl',
+        '861212'
+    );

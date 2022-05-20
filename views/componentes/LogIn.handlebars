@@ -3,18 +3,18 @@
       <div class="col-md-6 offset-md-3">
         <div class="card my-5">
 
-          <form class="card-body cardbody-color p-lg-5">
+          <form class="card-body cardbody-color p-lg-5" action="/validarUsuario">
             <div class="text-center">
               <img src="/static/assets/imgs/logoBeCycling.bmp" alt="logo tienda" class="img-fluid rounded-circle my-3"
                 width="200px">
             </div>
 
             <div class="mb-3">
-              <input type="email" class="form-control" id="loginEmail"
-                placeholder="eMail">
+              <input type="email" name="correo" class="form-control"
+                placeholder="Correo">
             </div>
             <div class="mb-3">
-              <input type="password" class="form-control" id="password" placeholder="password">
+              <input type="password" name="contrasena" class="form-control" placeholder="Contraseña">
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-dark">Ingresar</button>

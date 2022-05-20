@@ -44,6 +44,15 @@ app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
 
+//? VALIDAR JWT
+
+const validarTokenUsuario = (token) => {
+	let key = token;
+	const validate = jwt.verify(key, process.env.PRIVATE_KEY);
+
+	return validate;
+};
+
 // ? --------------------- QUERYS ----------------------------
 const {
 	getReservas,
@@ -54,8 +63,25 @@ const {
 	actualizarEstadoSPC,
 	actualizarSPC,
 	eliminarSPC,
+	comprobarLogIN,
 } = require("./DB/querys");
 // ? --------------------- FIN QUERYS ----------------------------
+
+// ! MIDLEWARE
+
+app.use("/dashboard", (req, res, next) => {
+	if (req.cookies.token) {
+		let token = req.cookies.token;
+		let validate = validarTokenUsuario(token);
+		if (validate) {
+			next();
+		} else {
+			res.redirect("/");
+		}
+	}
+});
+
+// ! FIN MIDLEWARE
 
 // ! --------------------- RUTAS ----------------------------
 
@@ -65,36 +91,51 @@ app.get("/", async (req, res) => {
 
 	res.render("Inicio", {
 		layout: "Inicio",
-		sexo: camposPredefinidosFormulario.sexos,
-		disciplina: camposPredefinidosFormulario.disciplinas,
-		marca: camposPredefinidosFormulario.marcas,
-		componente: camposPredefinidosFormulario.componentes,
-		material: camposPredefinidosFormulario.materiales,
-		talla: camposPredefinidosFormulario.tallas,
-		estado: camposPredefinidosFormulario.estados,
 	});
 });
 
 app.get("/dashboard", async (req, res) => {
+	let token = req.cookies.token;
+	let datosUsuario = validarTokenUsuario(token);
+
 	const reservas = await getReservas();
 	const camposPredefinidosFormulario =
 		await getCamposPredefinidosFormularioSPC();
 
-	res.render("Dashboard", {
-		layout: "Dashboard",
-		reserva: reservas,
-		sexos: camposPredefinidosFormulario.sexos,
-		disciplinas: camposPredefinidosFormulario.disciplinas,
-		marcas: camposPredefinidosFormulario.marcas,
-		componentes: camposPredefinidosFormulario.componentes,
-		materiales: camposPredefinidosFormulario.materiales,
-		tallas: camposPredefinidosFormulario.tallas,
-		estados: camposPredefinidosFormulario.estados,
-		predefinidos: camposPredefinidosFormulario,
-	});
+	if(datosUsuario.rol_usuario === "Administrador"){
+		res.render("Dashboard", {
+			layout: "Dashboard",
+			administrador: true,
+			reserva: reservas,
+			sexos: camposPredefinidosFormulario.sexos,
+			disciplinas: camposPredefinidosFormulario.disciplinas,
+			marcas: camposPredefinidosFormulario.marcas,
+			componentes: camposPredefinidosFormulario.componentes,
+			materiales: camposPredefinidosFormulario.materiales,
+			tallas: camposPredefinidosFormulario.tallas,
+			estados: camposPredefinidosFormulario.estados,
+			predefinidos: camposPredefinidosFormulario,
+		});
+	} else if (datosUsuario.rol_usuario === "Tienda"){
+		res.render("Dashboard", {
+			layout: "Dashboard",
+			tienda: true,
+			reserva: reservas,
+			sexos: camposPredefinidosFormulario.sexos,
+			disciplinas: camposPredefinidosFormulario.disciplinas,
+			marcas: camposPredefinidosFormulario.marcas,
+			componentes: camposPredefinidosFormulario.componentes,
+			materiales: camposPredefinidosFormulario.materiales,
+			tallas: camposPredefinidosFormulario.tallas,
+			estados: camposPredefinidosFormulario.estados,
+			predefinidos: camposPredefinidosFormulario,
+		});
+	}
+
+	
 });
 
-app.get("/detalle-spc/:id", async (req, res) => {
+app.get("/dashboard/detalle-spc/:id", async (req, res) => {
 	const id_spc = req.params.id;
 	const detalleSPC = await getDetalleSPC(id_spc);
 	const camposPredefinidosFormulario =
@@ -137,6 +178,23 @@ app.get("/detalle-spc/:id", async (req, res) => {
 
 // * API REST
 
+app.get("/validarUsuario", async (req, res) => {
+	const { correo, contrasena } = req.query;
+	const existeUsuario = await comprobarLogIN(correo, contrasena);
+
+	if (existeUsuario) {
+		const token = jwt.sign(existeUsuario, process.env.PRIVATE_KEY);
+		res.cookie("token", token, {
+			httpOnly: true,
+
+		});
+		res.redirect("/dashboard");
+	} else {
+		res.statusCode = 401;
+		res.redirect("/");
+	}
+});
+
 app.get("/reservas", async (req, res) => {
 	const reservas = await getReservas();
 	// console.log(reservas);
@@ -150,6 +208,14 @@ app.post("/nuevaReserva", async (req, res) => {
 	const data = req.body;
 
 	const statusNuevaReserva = await postNuevaReserva(data);
+
+	if (statusNuevaReserva) {
+		res.status(200);
+		res.send("OK");
+	} else {
+		res.status(500);
+		res.send("ERROR");
+	}
 });
 
 app.get("/buscarCliente", async (req, res) => {

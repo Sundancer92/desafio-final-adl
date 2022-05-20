@@ -266,7 +266,10 @@
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		const formData = new FormData(form);
-		const data = {id_producto: "{{id_producto}}"};
+		const data = {
+			id_producto: "{{id_producto}}",
+			id_cliente: "{{id_cliente}}",
+		};
 		
 		formData.forEach((value, key) => {
 			data[key] = value;

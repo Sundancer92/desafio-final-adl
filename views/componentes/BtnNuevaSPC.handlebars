@@ -32,7 +32,8 @@
     })
       .then(res => {
         if(res.status === 200) {
-          console.log('Reserva creada');
+          console.log("Reserva creada")
+          alert('Reserva creada');
           location.reload();
         } else {
           console.log('Error al crear reserva');
@@ -78,8 +79,6 @@
         }
       })
       .then(data => {
-        console.log(data);
-
         if(!!data){
         document.querySelector('input[name="nombre_cliente"]').value = data.nombre;
         document.querySelector('input[name="nombre_cliente"]').setAttribute("disabled", "");
